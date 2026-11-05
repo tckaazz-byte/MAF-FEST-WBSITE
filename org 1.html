@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAJMA'A ARTS FEST 2K26 — Official Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<!-- SheetJS for Excel Reading/Writing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{maf:{blue:'#0B5EC2',dark:'#074A9A',deep:'#053A7D',black:'#0B0B0B'}},fontFamily:{archivo:['Archivo','sans-serif'],inter:['Inter','sans-serif'],pop:['Poppins','sans-serif']}}}}
+</script>
+<style>
+*{scrollbar-width:thin;scrollbar-color:#0B5EC2 #EAF2FF}
+body{font-family:'Inter',sans-serif;background:#F4F8FF;color:#0B0B0B}
+.font-archivo{font-family:'Archivo',sans-serif}
+.circuit-bg{background-image:radial-gradient(circle at 12px 12px, rgba(255,255,255,.28) 3px, transparent 4px),radial-gradient(circle at 42px 28px, rgba(255,255,255,.18) 2px, transparent 3px);background-size:90px 90px}
+.dot-pattern{background-image:radial-gradient(#0B5EC2 1.6px, transparent 1.7px);background-size:18px 18px}
+.marquee{display:flex;gap:2.5rem;animation:scroll 22s linear infinite;white-space:nowrap}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.floaty{animation:floaty 4s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+.pulse-dot{animation:pulseDot 1.6s infinite}
+@keyframes logoReveal { 0% { transform: scale(0.5) translateY(30px); opacity: 0; filter: blur(10px); } 100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); } }
+.intro-anim { animation: logoReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.card-shadow{box-shadow:0 10px 30px rgba(11,94,194,.10),0 2px 8px rgba(0,0,0,.05)}
+.card-shadow-lg{box-shadow:0 20px 45px rgba(11,94,194,.16),0 6px 16px rgba(0,0,0,.07)}
+.progress-bar{transition:width 1s cubic-bezier(.22,1,.36,1)}
+.tab-active{background:#0B0B0B!important;color:white!important}
+.group-chip-active{background:#0B5EC2!important;color:white!important;border-color:#0B5EC2!important}
+.reg-group-active{border-color:#0B5EC2!important;background:#EAF3FF!important;color:#0B5EC2!important}
+input,select{outline:none}
+input:focus,select:focus{border-color:#0B5EC2!important;box-shadow:0 0 0 3px rgba(11,94,194,.15)}
+.error-border{border-color:#EF4444!important;background:#FFF7F7!important}
+.scroll-box::-webkit-scrollbar{width:5px; height:5px}
+.scroll-box::-webkit-scrollbar-thumb{background:#0B5EC2;border-radius:10px}
+.host-tab-active{border-bottom-color:#0B5EC2!important;color:#0B5EC2!important;background:#F8FBFF}
+.host-tab-inactive{border-bottom-color:transparent!important;color:#64748b!important}
+@media print {
+  body * { visibility: hidden; }
+  #printableTable, #printableTable * { visibility: visible; }
+  #printableTable { position: absolute; left: 0; top: 0; width: 100%; }
+  .no-print { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- INTRO ANIMATION SCREEN -->
+<div id="introScreen" class="fixed inset-0 z-[999999] bg-[#053A7D] flex flex-col items-center justify-center transition-opacity duration-[800ms]">
+  <div class="absolute inset-0 circuit-bg opacity-30"></div>
+  <div class="relative z-10 flex flex-col items-center intro-anim text-center px-4">
+    <div class="w-28 h-28 md:w-36 md:h-36 bg-white rounded-3xl p-3 shadow-[0_0_60px_rgba(255,255,255,0.15)] mb-6 relative">
+      <div class="absolute inset-0 border-4 border-yellow-300 rounded-3xl animate-pulse opacity-50"></div>
+      <img src="https://www.designarena.ai/u/a462b118-45bd-4495-92c1-61f08e26d8a6" alt="MAF Logo" class="w-full h-full object-contain relative z-10">
+    </div>
+    <h1 class="font-archivo font-black text-4xl md:text-6xl text-white leading-[1.1] tracking-tight">MAJMA'A <br><span class="text-yellow-300">ARTS FEST</span> <span class="text-cyan-200">2K26</span></h1>
+    <p class="text-blue-200 mt-5 text-[11px] md:text-xs font-bold tracking-[.35em] uppercase">Loading Official Dashboard</p>
+    <div class="flex gap-2.5 mt-6">
+      <div class="w-2.5 h-2.5 bg-yellow-300 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
+      <div class="w-2.5 h-2.5 bg-white rounded-full animate-bounce" style="animation-delay: 0.15s;"></div>
+      <div class="w-2.5 h-2.5 bg-cyan-300 rounded-full animate-bounce" style="animation-delay: 0.3s;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOP TICKER -->
+<div class="bg-black text-white overflow-hidden py-2 text-[11px] md:text-xs font-bold tracking-[.18em] uppercase">
+  <div class="marquee">
+    <span>✦ MAJMA'A ARTS FEST 2K26</span><span>✦ OVERALL • GROUP WISE • CATEGORY • INDIVIDUAL RESULTS</span><span>✦ GROUPS: MA'BAR • MELOOHA • MUZRIZ</span><span>✦ HOST REGISTRATION OPEN — EXCEL UPLOAD AVAILABLE</span>
+    <span>✦ MAJMA'A ARTS FEST 2K26</span><span>✦ OVERALL • GROUP WISE • CATEGORY • INDIVIDUAL RESULTS</span><span>✦ GROUPS: MA'BAR • MELOOHA • MUZRIZ</span><span>✦ HOST REGISTRATION OPEN — EXCEL UPLOAD AVAILABLE</span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-blue-100">
+  <div class="max-w-[1440px] mx-auto px-4 md:px-6 h-[72px] flex items-center justify-between gap-4">
+    <a href="#" class="flex items-center gap-3 shrink-0">
+      <div class="w-11 h-11 md:w-12 md:h-12 bg-white border-2 border-[#0B5EC2] rounded-xl overflow-hidden flex items-center justify-center p-1 shadow-sm">
+        <img src="https://www.designarena.ai/u/a462b118-45bd-4495-92c1-61f08e26d8a6" alt="MAF Logo" class="w-full h-full object-contain">
+      </div>
+      <div class="leading-none">
+        <p class="font-archivo font-black text-[18px] md:text-[22px] tracking-tight">MAJMA'A <span class="text-[#0B5EC2]">ARTS FEST</span> <span class="bg-black text-white px-2 py-0.5 rounded-md text-[13px] align-middle">2K26</span></p>
+        <p class="text-[10px] md:text-[11px] font-bold tracking-[.22em] text-slate-500 mt-1">MAJMA'A ARTS FEST 2026 • OFFICIAL</p>
+      </div>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-1 bg-slate-100 p-1 rounded-full">
+      <a href="#home" class="px-4 py-2 rounded-full bg-black text-white text-sm font-bold">Home</a>
+      <a href="#dashboard" class="px-4 py-2 rounded-full text-sm font-semibold hover:bg-white">Dashboard</a>
+      <a href="#groups" class="px-4 py-2 rounded-full text-sm font-semibold hover:bg-white">Groups</a>
+      <button onclick="openHostModal()" class="px-4 py-2 rounded-full text-sm font-bold bg-amber-500 hover:bg-amber-600 text-white flex items-center gap-1.5 shadow-sm">
+        <i class="fa-solid fa-shield-halved text-xs"></i> Host Panel
+      </button>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <div class="hidden md:flex items-center gap-2 bg-[#EAF3FF] text-[#0B5EC2] px-3 py-2 rounded-full text-xs font-bold"><span class="w-2 h-2 bg-green-500 rounded-full pulse-dot"></span> LIVE RESULTS</div>
+      <button onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'})" class="bg-[#0B5EC2] hover:bg-[#074A9A] text-white px-4 md:px-5 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-600/20"><i class="fa-solid fa-pen-to-square"></i><span class="hidden sm:inline">Register Now</span><span class="sm:hidden">Register</span></button>
+      <button id="menuBtn" class="lg:hidden w-10 h-10 rounded-full border flex items-center justify-center"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="hidden lg:hidden border-t bg-white px-4 py-4 space-y-2">
+    <a href="#home" class="block py-2 font-semibold">Home</a>
+    <a href="#dashboard" class="block py-2 font-semibold">Dashboard</a>
+    <a href="#groups" class="block py-2 font-semibold">Groups</a>
+    <button onclick="openHostModal(); document.getElementById('mobileMenu').classList.add('hidden')" class="w-full text-left py-2.5 px-3 font-bold bg-amber-500 text-white rounded-xl flex items-center gap-2 mt-2">
+      <i class="fa-solid fa-key"></i> Host Panel
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="home" class="relative overflow-hidden bg-white">
+  <div class="absolute inset-0 bg-gradient-to-br from-[#0B5EC2] via-[#0A4FA6] to-[#053A7D] circuit-bg"></div>
+  <div class="absolute -right-20 -top-20 w-[420px] h-[420px] bg-white/10 rounded-full blur-3xl"></div>
+
+  <div class="relative max-w-[1440px] mx-auto px-4 md:px-6 pt-8 md:pt-12 pb-10 grid lg:grid-cols-[1.15fr_.85fr] gap-8 items-center">
+    <div class="text-white">
+      <div class="inline-flex items-center gap-2 bg-white/15 border border-white/25 backdrop-blur px-3 py-1.5 rounded-full text-[11px] font-bold tracking-widest"><i class="fa-solid fa-trophy text-yellow-300"></i> MAJMA'A SHAREEATH AND ARTS COLLEGE • 2026 EDITION</div>
+      <h1 class="font-archivo font-black leading-[.9] mt-5 text-[46px] md:text-[76px] tracking-tight">MAJMA'A<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-white to-cyan-200">ARTS FEST</span><br><span class="text-[38px] md:text-[58px]">2K26</span></h1>
+      <p class="mt-4 text-blue-100 max-w-xl text-sm md:text-base leading-relaxed">Where art meets spirit. Three legendary groups — <b class="text-white">MA'BAR</b>, <b class="text-yellow-300">MELOOHA</b> & <b class="text-orange-300">MUZRIZ</b> — compete for the Overall Championship. Track points live, register participants & celebrate every performance.</p>
+
+      <div class="flex flex-wrap gap-3 mt-6">
+        <button onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})" class="bg-white text-[#0B5EC2] px-6 py-3 rounded-full font-extrabold text-sm flex items-center gap-2 shadow-xl"><i class="fa-solid fa-chart-simple"></i> View Live Dashboard</button>
+        <button onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'})" class="border-2 border-white/40 text-white px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2 hover:bg-white/10"><i class="fa-solid fa-id-card"></i> Registration Form</button>
+      </div>
+
+      <!-- Countdown -->
+      <div class="mt-8 bg-white/10 border border-white/20 backdrop-blur rounded-2xl p-4 max-w-lg">
+        <p class="text-[10px] tracking-[.25em] font-bold text-blue-200 flex items-center gap-2"><i class="fa-regular fa-clock"></i> FEST STARTS IN</p>
+        <div class="grid grid-cols-4 gap-3 mt-3 text-center">
+          <div class="bg-white rounded-xl py-3 text-black"><p id="cdD" class="font-archivo font-black text-2xl leading-none">00</p><p class="text-[9px] font-bold tracking-widest text-slate-500 mt-1">DAYS</p></div>
+          <div class="bg-white rounded-xl py-3 text-black"><p id="cdH" class="font-archivo font-black text-2xl leading-none">00</p><p class="text-[9px] font-bold tracking-widest text-slate-500 mt-1">HOURS</p></div>
+          <div class="bg-white rounded-xl py-3 text-black"><p id="cdM" class="font-archivo font-black text-2xl leading-none">00</p><p class="text-[9px] font-bold tracking-widest text-slate-500 mt-1">MINS</p></div>
+          <div class="bg-black rounded-xl py-3 text-white border border-white/20"><p id="cdS" class="font-archivo font-black text-2xl leading-none text-yellow-300">00</p><p class="text-[9px] font-bold tracking-widest text-slate-400 mt-1">SECS</p></div>
+        </div>
+        <p class="text-xs text-blue-100 mt-3 flex gap-4"><span><i class="fa-solid fa-location-dot"></i> Majma'a Auditorium</span><span><i class="fa-solid fa-calendar"></i> Nov 15 - 17, 2026</span></p>
+      </div>
+    </div>
+
+    <!-- Logo Card -->
+    <div class="relative">
+      <div class="absolute -inset-3 bg-yellow-300/20 blur-2xl rounded-[32px]"></div>
+      <div class="relative bg-white rounded-[28px] p-4 md:p-6 card-shadow-lg floaty">
+        <div class="flex justify-between items-start">
+          <span class="bg-[#0B5EC2] text-white text-[10px] font-black tracking-widest px-3 py-1 rounded-full">OFFICIAL LOGO • MAF</span>
+          <span class="text-xs font-bold text-slate-400">EST. 2026</span>
+        </div>
+        <img src="https://www.designarena.ai/u/a462b118-45bd-4495-92c1-61f08e26d8a6" alt="Majma'a Arts Fest Logo" class="w-full max-h-[380px] object-contain mt-2">
+        <div class="grid grid-cols-3 gap-2 mt-4">
+          <div class="bg-[#EAF3FF] rounded-xl p-3 text-center"><p class="font-archivo font-black text-[#0B5EC2] text-lg leading-none">3</p><p class="text-[9px] font-bold tracking-widest text-slate-500">GROUPS</p></div>
+          <div class="bg-black rounded-xl p-3 text-center text-white"><p class="font-archivo font-black text-lg leading-none">31+</p><p class="text-[9px] font-bold tracking-widest text-slate-400">EVENTS</p></div>
+          <div class="bg-yellow-400 rounded-xl p-3 text-center"><p class="font-archivo font-black text-lg leading-none">107</p><p class="text-[9px] font-bold tracking-widest text-black/60">PARTICIPANTS</p></div>
+        </div>
+      </div>
+      <div class="absolute -left-3 top-6 bg-white rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-green-100 text-green-600 flex items-center justify-center"><i class="fa-solid fa-arrow-trend-up"></i></div>
+        <div><p class="text-xs font-black">Points Counting Live</p><p class="text-[11px] text-slate-500">Updated in real-time</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<section class="max-w-[1440px] mx-auto px-4 md:px-6 -mt-2 pt-6">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+    <!-- PENDING RESULTS STAT (Replaced Participants) -->
+    <div class="bg-white rounded-2xl p-4 md:p-5 card-shadow border border-blue-50 flex items-center gap-4">
+      <div class="w-12 h-12 rounded-2xl bg-orange-500 text-white flex items-center justify-center text-xl"><i class="fa-solid fa-clock-rotate-left"></i></div>
+      <div><p class="text-[11px] font-bold tracking-widest text-slate-400">RESULTS PENDING</p><p id="statPending" class="font-archivo font-black text-3xl leading-none mt-1">0</p></div>
+    </div>
+    
+    <div class="bg-white rounded-2xl p-4 md:p-5 card-shadow border border-blue-50 flex items-center gap-4">
+      <div class="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center text-xl"><i class="fa-solid fa-star"></i></div>
+      <div><p class="text-[11px] font-bold tracking-widest text-slate-400">TOTAL POINTS</p><p id="statPoints" class="font-archivo font-black text-3xl leading-none mt-1">0</p></div>
+    </div>
+    <div class="bg-white rounded-2xl p-4 md:p-5 card-shadow border border-blue-50 flex items-center gap-4">
+      <div class="w-12 h-12 rounded-2xl bg-violet-600 text-white flex items-center justify-center text-xl"><i class="fa-solid fa-layer-group"></i></div>
+      <div><p class="text-[11px] font-bold tracking-widest text-slate-400">EVENT ITEMS</p><p class="font-archivo font-black text-3xl leading-none mt-1" id="statEvents">0</p></div>
+    </div>
+    <div class="bg-white rounded-2xl p-4 md:p-5 card-shadow border border-blue-50 flex items-center gap-4">
+      <div class="w-12 h-12 rounded-2xl bg-yellow-400 text-black flex items-center justify-center text-xl"><i class="fa-solid fa-trophy"></i></div>
+      <div><p class="text-[11px] font-bold tracking-widest text-slate-400">LEADING GROUP</p><p id="statLeader" class="font-archivo font-black text-xl leading-none mt-1 text-[#0B5EC2]">N/A</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN LAYOUT : DASHBOARD + SIDE REGISTRATION -->
+<main class="max-w-[1440px] mx-auto px-4 md:px-6 py-6 grid lg:grid-cols-[1fr_380px] gap-6 items-start">
+
+  <!-- LEFT CONTENT -->
+  <div class="space-y-6 min-w-0">
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="bg-white rounded-[24px] card-shadow border border-blue-50 overflow-hidden scroll-mt-24">
+      <div class="p-5 md:p-6 pb-0">
+        <div class="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2"><span class="bg-black text-white text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full">RESULT DASHBOARD</span><span class="text-xs font-bold text-green-600 flex items-center gap-1"><span class="w-2 h-2 bg-green-500 rounded-full pulse-dot"></span> Counting Points...</span></div>
+            <h2 class="font-archivo font-black text-2xl md:text-3xl mt-2">Overall • Group Wise • Individual</h2>
+            <p class="text-sm text-slate-500 mt-1">Live point counting based on manually assigned points from the Host Panel.</p>
+          </div>
+          <div class="flex gap-2 no-print">
+            <button onclick="downloadCSV()" class="border px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-slate-50"><i class="fa-solid fa-download"></i> Download CSV</button>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="flex flex-col md:flex-row gap-3 mt-5">
+          <div class="relative flex-1">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input id="searchInput" type="text" placeholder="Search by Name, Chest No. or Event..." class="w-full border-2 border-slate-200 rounded-full py-3 pl-11 pr-4 text-sm font-medium">
+          </div>
+          <select id="sortSelect" class="border-2 border-slate-200 rounded-full px-4 py-3 text-sm font-bold bg-white">
+            <option value="points">Sort: Highest Points</option>
+            <option value="name">Sort: Name A-Z</option>
+            <option value="chest">Sort: Chest No.</option>
+          </select>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex gap-2 mt-5 bg-slate-100 p-1.5 rounded-2xl md:rounded-full w-full overflow-x-auto scroll-box hide-scrollbar">
+          <button data-tab="overall" class="tab-btn tab-active px-4 md:px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-ranking-star"></i> Overall Result</button>
+          <button data-tab="group" class="tab-btn px-4 md:px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-users"></i> Group Wise</button>
+          <button data-tab="categories" class="tab-btn px-4 md:px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-layer-group"></i> Category Wise</button>
+          <button data-tab="individual" class="tab-btn px-4 md:px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-user"></i> Individual</button>
+        </div>
+      </div>
+
+      <!-- Panel: Overall -->
+      <div id="panel-overall" class="p-5 md:p-6">
+        <div id="podium" class="grid md:grid-cols-3 gap-4"></div>
+
+        <div class="grid lg:grid-cols-5 gap-4 mt-6">
+          <div class="lg:col-span-3 bg-[#F8FBFF] border border-blue-100 rounded-2xl p-4">
+            <div class="flex justify-between items-center"><h3 class="font-black text-sm">Group Points Comparison</h3><span class="text-[11px] font-bold bg-white border px-2 py-1 rounded-full">LIVE COUNTING</span></div>
+            <div class="h-[220px] mt-3"><canvas id="pointsChart"></canvas></div>
+          </div>
+          <div class="lg:col-span-2 bg-black text-white rounded-2xl p-5 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 dot-pattern"></div>
+            <p class="relative text-[10px] tracking-[.25em] font-bold text-slate-400">CHAMPIONSHIP RACE</p>
+            <h3 class="relative font-archivo font-black text-2xl mt-1">Who will win<br>MAF 2K26?</h3>
+            <div id="raceList" class="relative mt-4 space-y-3"></div>
+            <p class="relative text-xs text-slate-400 mt-4">Points calculated dynamically based on manual result entries.</p>
+          </div>
+        </div>
+
+        <div class="mt-6 overflow-x-auto rounded-2xl border">
+          <table class="w-full text-sm min-w-[560px]">
+            <thead><tr class="bg-[#0B5EC2] text-white text-left"><th class="p-3">Rank</th><th class="p-3">Group</th><th class="p-3">Participants</th><th class="p-3">1st Prizes</th><th class="p-3">Total Points</th><th class="p-3">Share</th></tr></thead>
+            <tbody id="overallTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Panel: Group Wise -->
+      <div id="panel-group" class="p-5 md:p-6 hidden">
+        <div class="flex flex-wrap gap-2" id="groupWisePills">
+          <button data-gid="mabar" class="gw-pill group-chip-active border-2 px-5 py-2.5 rounded-full font-black text-sm">MA'BAR</button>
+          <button data-gid="meloha" class="gw-pill border-2 px-5 py-2.5 rounded-full font-black text-sm">MELOOHA</button>
+          <button data-gid="muzriz" class="gw-pill border-2 px-5 py-2.5 rounded-full font-black text-sm">MUZRIZ</button>
+        </div>
+        <div id="groupWiseDetail" class="mt-5"></div>
+      </div>
+
+      <!-- Panel: Category Wise -->
+      <div id="panel-categories" class="p-5 md:p-6 hidden">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+          <div class="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl md:rounded-full">
+            <button onclick="currentCategoryView='Stage'; renderCategoryWise()" data-cattype="Stage" class="cat-pill bg-black text-white px-5 py-2.5 rounded-full font-black text-sm transition-all">STAGE RESULTS</button>
+            <button onclick="currentCategoryView='Offstage'; renderCategoryWise()" data-cattype="Offstage" class="cat-pill px-5 py-2.5 rounded-full font-black text-sm text-slate-500 hover:text-black transition-all">OFFSTAGE RESULTS</button>
+            <button onclick="currentCategoryView='General'; renderCategoryWise()" data-cattype="General" class="cat-pill px-5 py-2.5 rounded-full font-black text-sm text-slate-500 hover:text-black transition-all">GENERAL RESULTS</button>
+          </div>
+          <div class="text-xs bg-[#EAF3FF] text-[#0B5EC2] border border-[#0B5EC2]/20 font-bold px-4 py-2 rounded-full shadow-sm">Viewing: <span id="catViewLabel">STAGE</span></div>
+        </div>
+
+        <div class="overflow-x-auto rounded-2xl border shadow-sm">
+          <table class="w-full text-sm min-w-[720px]">
+            <thead><tr class="bg-[#0B0B0B] text-white text-left"><th class="p-3">Rank</th><th class="p-3">Participant</th><th class="p-3">Event Item</th><th class="p-3">Group</th><th class="p-3">Points</th></tr></thead>
+            <tbody id="categoryTable"></tbody>
+          </table>
+        </div>
+        <p id="noCatResult" class="hidden text-center py-10 text-slate-400 font-semibold bg-slate-50 rounded-2xl mt-4 border border-dashed">No results found for this category.</p>
+      </div>
+
+      <!-- Panel: Individual -->
+      <div id="panel-individual" class="p-5 md:p-6 hidden space-y-6">
+        
+        <!-- CATEGORY FILTER FOR INDIVIDUAL RESULTS -->
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b pb-5">
+          <div class="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl md:rounded-full">
+            <button onclick="currentIndividualCat='ALL'; renderIndividual()" data-icat="ALL" class="icat-pill bg-black text-white px-4 md:px-5 py-2 rounded-full font-black text-xs transition-all">ALL GRADES</button>
+            <button onclick="currentIndividualCat='THAMHEEDIYYA'; renderIndividual()" data-icat="THAMHEEDIYYA" class="icat-pill px-4 md:px-5 py-2 rounded-full font-black text-xs text-slate-500 hover:text-black transition-all">THAMHEEDIYYA</button>
+            <button onclick="currentIndividualCat='ALIYA'; renderIndividual()" data-icat="ALIYA" class="icat-pill px-4 md:px-5 py-2 rounded-full font-black text-xs text-slate-500 hover:text-black transition-all">ALIYA</button>
+            <button onclick="currentIndividualCat='PG'; renderIndividual()" data-icat="PG" class="icat-pill px-4 md:px-5 py-2 rounded-full font-black text-xs text-slate-500 hover:text-black transition-all">PG</button>
+          </div>
+          <div class="text-xs bg-[#EAF3FF] text-[#0B5EC2] border border-[#0B5EC2]/20 font-bold px-4 py-2 rounded-full shadow-sm">Viewing: <span id="icatViewLabel">ALL GRADES</span></div>
+        </div>
+
+        <!-- INDIVIDUAL GRAPHS GRID -->
+        <div class="grid lg:grid-cols-3 gap-4">
+          <div class="bg-[#0B0B0B] text-white border border-slate-800 rounded-2xl p-4 md:p-5 relative overflow-hidden card-shadow">
+            <div class="absolute inset-0 opacity-10 circuit-bg"></div>
+            <div class="relative z-10">
+              <h3 class="font-archivo font-black text-lg text-yellow-300 flex items-center gap-2"><i class="fa-solid fa-star"></i> Emerging Stars <span class="text-[9px] text-black bg-yellow-300 px-2 py-0.5 rounded-full uppercase ml-1 tracking-widest" id="emergingCatBadge">ALL</span></h3>
+              <p class="text-[11px] text-slate-400 mb-2">Top 5 Leading Talents</p>
+              <div class="h-[230px] relative w-full flex justify-center mt-2"><canvas id="emergingStarChart"></canvas></div>
+            </div>
+          </div>
+          <div class="lg:col-span-2 bg-[#F8FBFF] border border-blue-100 rounded-2xl p-4 md:p-5 flex flex-col">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div>
+                <h3 class="font-archivo font-black text-lg">Individual Scores Graph <span class="text-[10px] bg-blue-100 text-[#0B5EC2] border border-[#0B5EC2]/20 px-2 py-0.5 rounded-full align-middle ml-1 uppercase font-black" id="barCatBadge">ALL</span></h3>
+                <p class="text-xs text-slate-500">Each bar displays Participant & Group</p>
+              </div>
+            </div>
+            <div class="h-[220px] md:flex-1 relative w-full min-h-[220px]"><canvas id="individualChart"></canvas></div>
+          </div>
+        </div>
+
+        <div id="printableTable">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h3 class="font-archivo font-black text-xl">Individual Standings Table</h3>
+            <div class="flex items-center gap-2">
+              <span class="text-xs bg-[#EAF3FF] text-[#0B5EC2] font-bold px-3 py-1.5 rounded-full"><span id="indivCount">0</span> participants</span>
+              <button onclick="window.print()" class="no-print bg-black text-white px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2"><i class="fa-solid fa-print"></i> Print</button>
+            </div>
+          </div>
+          <div class="overflow-x-auto mt-4 rounded-2xl border">
+            <table class="w-full text-sm min-w-[720px]" id="individualTableContainer">
+              <thead>
+                <tr class="bg-black text-white text-left">
+                  <th class="p-3">Rank</th><th class="p-3">Participant</th><th class="p-3">Chest No.</th>
+                  <th class="p-3">Event Item</th><th class="p-3">Group</th><th class="p-3">Points</th>
+                  <th class="p-3">Award Assigned</th><th class="p-3 text-center host-action-col hidden no-print">Action</th>
+                </tr>
+              </thead>
+              <tbody id="individualTable"></tbody>
+            </table>
+          </div>
+          <p id="noResult" class="hidden text-center py-8 text-slate-400 font-semibold bg-slate-50 rounded-2xl border-dashed border mt-4">No participants found.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GROUPS SECTION -->
+    <section id="groups" class="scroll-mt-24">
+      <div class="flex items-end justify-between mb-4">
+        <div><p class="text-[11px] font-black tracking-[.25em] text-[#0B5EC2]">COMPETING GROUPS</p><h2 class="font-archivo font-black text-3xl">Three Groups. One Champion.</h2></div>
+        <span class="hidden md:block text-xs font-bold bg-white border px-3 py-2 rounded-full">MA'BAR vs MELOOHA vs MUZRIZ</span>
+      </div>
+      <div id="groupsGrid" class="grid md:grid-cols-3 gap-4"></div>
+    </section>
+
+  </div>
+
+  <!-- RIGHT SIDEBAR : REGISTRATION (SIDE PART - HOST ONLY) -->
+  <aside id="register" class="lg:sticky lg:top-[88px] space-y-4 scroll-mt-24">
+    <div class="bg-white rounded-[24px] card-shadow-lg border-2 border-[#0B5EC2]/15 overflow-hidden">
+      <div class="bg-[#0B5EC2] text-white p-5 relative overflow-hidden">
+        <div class="absolute inset-0 circuit-bg opacity-60"></div>
+        <div class="relative flex items-center gap-3">
+          <img src="https://www.designarena.ai/u/a462b118-45bd-4495-92c1-61f08e26d8a6" class="w-12 h-12 bg-white rounded-xl p-1 object-contain" alt="logo">
+          <div><p class="text-[10px] tracking-[.25em] font-bold text-blue-200">SIDE PANEL • REGISTRATION</p><h3 class="font-archivo font-black text-xl leading-none mt-0.5">Participant Registration</h3></div>
+        </div>
+      </div>
+
+      <!-- Lock Screen for Registration -->
+      <div id="regLockScreen" class="p-8 text-center bg-slate-50 border-b flex flex-col items-center justify-center min-h-[300px]">
+        <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl mb-4 shadow-sm"><i class="fa-solid fa-lock"></i></div>
+        <h4 class="font-black text-lg">Host Access Required</h4>
+        <p class="text-xs text-slate-500 mt-2 mb-5 leading-relaxed">Participant registration is strictly locked. Only authorized hosts can register new candidates.</p>
+        <button type="button" onclick="openHostModal()" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-xl text-sm font-black shadow-md flex items-center gap-2 transition-all hover:-translate-y-0.5"><i class="fa-solid fa-key"></i> UNLOCK REGISTRATION</button>
+      </div>
+
+      <!-- Actual Form Container -->
+      <div id="regFormContainer" class="hidden">
+        <form id="regForm" class="p-5 space-y-4" novalidate>
+          <div>
+            <label class="text-xs font-black tracking-wide">FULL NAME</label>
+            <div class="relative mt-1.5"><i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i><input id="fName" type="text" placeholder="Enter participant name" class="w-full border-2 border-slate-200 rounded-xl py-3 pl-10 pr-3 text-sm font-semibold"></div>
+            <p id="eName" class="hidden text-red-500 text-[11px] font-bold mt-1">Name must be at least 3 characters</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-black tracking-wide">CHEST NO.</label>
+              <div class="relative mt-1.5"><i class="fa-solid fa-shirt absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i><input id="fChest" type="text" inputmode="numeric" placeholder="e.g. 102" class="w-full border-2 border-slate-200 rounded-xl py-3 pl-10 pr-3 text-sm font-semibold"></div>
+              <p id="eChest" class="hidden text-red-500 text-[11px] font-bold mt-1">Enter 2-3 digit chest no.</p>
+            </div>
+            <div>
+              <label class="text-xs font-black tracking-wide">CATEGORY</label>
+              <select id="fCat" class="w-full border-2 border-slate-200 rounded-xl py-3 px-3 text-sm font-semibold mt-1.5 bg-white">
+                <option value="THAMHEEDIYYA">THAMHEEDIYYA</option>
+                <option value="ALIYA">ALIYA</option>
+                <option value="PG">PG</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs font-black tracking-wide flex justify-between">
+              <span>EVENT ITEMS</span><span class="text-slate-400 font-semibold">— hold Ctrl/Cmd to multi-select</span>
+            </label>
+            <!-- Dynamic dropdown matching category -->
+            <select id="fEvent" multiple class="w-full border-2 border-slate-200 rounded-xl py-2 px-3 text-sm font-semibold mt-1.5 bg-white h-28 scroll-box"></select>
+            <p id="eEvent" class="hidden text-red-500 text-[11px] font-bold mt-1">Please select at least one event item</p>
+          </div>
+
+          <div>
+            <label class="text-xs font-black tracking-wide">SELECT GROUP</label>
+            <div class="grid grid-cols-3 gap-2 mt-2" id="groupSelect">
+              <button type="button" data-reg-group="mabar" class="reg-group reg-group-active border-2 rounded-xl py-3 px-2 text-center font-black text-[13px] leading-tight">MA'BAR<span class="block text-[9px] font-bold opacity-70 tracking-widest mt-0.5">GROUP 01</span></button>
+              <button type="button" data-reg-group="meloha" class="reg-group border-2 rounded-xl py-3 px-2 text-center font-black text-[13px] leading-tight">MELOOHA<span class="block text-[9px] font-bold opacity-70 tracking-widest mt-0.5">GROUP 02</span></button>
+              <button type="button" data-reg-group="muzriz" class="reg-group border-2 rounded-xl py-3 px-2 text-center font-black text-[13px] leading-tight">MUZRIZ<span class="block text-[9px] font-bold opacity-70 tracking-widest mt-0.5">GROUP 03</span></button>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-black hover:bg-[#0B5EC2] transition text-white py-3.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-lg"><i class="fa-solid fa-check-to-slot"></i> REGISTER PARTICIPANT</button>
+
+          <div id="successBox" class="hidden bg-green-50 border-2 border-green-200 rounded-xl p-4 mt-3">
+            <p class="font-black text-green-700 text-sm flex items-center gap-2"><i class="fa-solid fa-circle-check"></i> Registration Successful!</p>
+            <p id="successText" class="text-xs text-green-600 mt-1 font-semibold"></p>
+          </div>
+
+          <!-- BULK EXCEL UPLOAD -->
+          <div class="relative flex py-4 items-center">
+            <div class="flex-grow border-t border-slate-200"></div>
+            <span class="flex-shrink-0 mx-4 text-slate-400 text-xs font-black tracking-widest">OR BULK ADD</span>
+            <div class="flex-grow border-t border-slate-200"></div>
+          </div>
+          
+          <input type="file" id="excelUpload" accept=".xlsx, .xls, .csv" class="hidden">
+          <button type="button" onclick="document.getElementById('excelUpload').click()" class="w-full bg-emerald-600 hover:bg-emerald-700 transition text-white py-3.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-lg mb-2">
+            <i class="fa-solid fa-file-excel"></i> IMPORT FROM EXCEL
+          </button>
+          <div class="text-[10px] text-center text-slate-400 font-medium leading-tight pb-3">
+            Expected Headers: Name, Chest, Event, Group, Category<br>
+            <a href="#" onclick="downloadExcelTemplate(event)" class="text-[#0B5EC2] underline font-bold mt-1 inline-block">Download Registration Template</a>
+          </div>
+        </form>
+
+        <!-- Registered List -->
+        <div class="px-5 pb-5">
+          <div class="flex items-center justify-between"><h4 class="font-black text-sm">Recently Registered</h4><span id="regCountBadge" class="bg-[#0B5EC2] text-white text-[11px] font-black px-2 py-1 rounded-full">0 new</span></div>
+          <div id="registeredList" class="mt-3 space-y-2 max-h-[240px] overflow-y-auto scroll-box pr-1"></div>
+          <p id="emptyReg" class="text-xs text-slate-400 text-center py-4 font-medium">No new registrations yet.</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<!-- HOST RESULT MANAGEMENT MODAL (ACCESSIBLE FROM MENU BAR) -->
+<div id="hostModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-[24px] max-w-[700px] w-full p-6 card-shadow-lg relative overflow-hidden max-h-[90vh] overflow-y-auto">
+    <button onclick="closeHostModal()" class="absolute top-4 right-4 w-9 h-9 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center text-slate-600 font-bold"><i class="fa-solid fa-xmark"></i></button>
+
+    <!-- Host Login Panel -->
+    <div id="modalHostLoginPanel">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-xl"><i class="fa-solid fa-lock"></i></div>
+        <div>
+          <span class="bg-amber-600 text-white text-[10px] font-black tracking-widest px-2.5 py-0.5 rounded-full">HOST ACCESS ONLY</span>
+          <h3 class="font-archivo font-black text-2xl mt-0.5">Host Authentication</h3>
+        </div>
+      </div>
+      <p class="text-sm text-slate-500 mt-3">Please enter the official host password to unlock result management and participant registration features.</p>
+
+      <form id="modalHostLoginForm" class="mt-5 space-y-4">
+        <div>
+          <label class="text-xs font-black tracking-wide">HOST PASSWORD</label>
+          <input id="modalHostPassword" type="password" autocomplete="current-password" placeholder="Enter host password" required class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold mt-1.5 bg-white">
+          <p id="modalHostLoginMessage" class="text-xs text-red-600 font-semibold mt-2 hidden"><i class="fa-solid fa-circle-exclamation"></i> Incorrect password. Please try again.</p>
+        </div>
+        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-md">
+          <i class="fa-solid fa-key"></i> UNLOCK HOST PANEL
+        </button>
+      </form>
+    </div>
+
+    <!-- Host Add Result Panel (Unlocked) -->
+    <div id="modalHostResultPanel" class="hidden">
+      <div class="flex items-center justify-between border-b pb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-blue-100 text-[#0B5EC2] rounded-xl flex items-center justify-center text-lg font-bold"><i class="fa-solid fa-award"></i></div>
+          <div>
+            <span class="bg-[#0B5EC2] text-white text-[10px] font-black tracking-widest px-2 py-0.5 rounded-full">HOST LOGGED IN</span>
+            <h3 class="font-archivo font-black text-xl leading-tight">Master Control Panel</h3>
+          </div>
+        </div>
+        <button id="modalHostLogoutBtn" type="button" class="text-xs font-black text-red-600 border border-red-200 bg-red-50 hover:bg-red-100 rounded-xl px-3 py-1.5 transition">LOG OUT</button>
+      </div>
+      
+      <!-- ADD RESULT SECTION -->
+      <div class="mt-4 pt-2">
+        <p class="text-xs font-black tracking-wide text-slate-500 uppercase mb-3"><i class="fa-solid fa-trophy mr-1"></i> Add Event Results</p>
+        <form id="modalResultForm" class="space-y-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="text-[11px] font-black tracking-wider text-[#0B5EC2] bg-[#EAF3FF] px-2 py-0.5 rounded-md"><i class="fa-solid fa-filter"></i> CATEGORY FILTER</label>
+              <select id="modalResultFilterCat" class="w-full border-2 border-blue-200 rounded-xl px-3 py-3 text-sm font-semibold mt-1.5 bg-white">
+                <option value="ALL">All Categories</option>
+                <option value="THAMHEEDIYYA">THAMHEEDIYYA</option>
+                <option value="ALIYA">ALIYA</option>
+                <option value="PG">PG</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[11px] font-black tracking-wider">PARTICIPANT</label>
+              <select id="modalResultParticipant" required class="w-full border-2 border-slate-200 rounded-xl px-3 py-3 text-sm font-semibold mt-1.5 bg-white">
+                <option value="">Select participant</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="text-[11px] font-black tracking-wider">EVENT ITEM</label>
+            <select id="modalResultEvent" required class="w-full border-2 border-slate-200 rounded-xl px-3 py-3 text-sm font-semibold mt-1.5 bg-white"></select>
+            <p class="text-[10px] text-slate-400 mt-1 font-semibold">Events list adapts automatically based on the selected participant's category.</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="text-[11px] font-black tracking-wider">POSITION / AWARD</label>
+              <select id="modalResultAward" required class="w-full border-2 border-slate-200 rounded-xl px-3 py-3 text-sm font-semibold mt-1.5 bg-white">
+                <option value="1st Prize">1st Prize</option><option value="2nd Prize">2nd Prize</option><option value="3rd Prize">3rd Prize</option><option value="Participation">Participation</option><option value="Custom Award">Custom Award</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[11px] font-black tracking-wider">GRADE (A/B/C)</label>
+              <select id="modalResultGrade" class="w-full border-2 border-slate-200 rounded-xl px-3 py-3 text-sm font-semibold mt-1.5 bg-white">
+                <option value="">No Grade</option><option value="A">A Grade</option><option value="B">B Grade</option><option value="C">C Grade</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[11px] font-black tracking-wider text-slate-700">POINTS TO ADD</label>
+              <input id="modalResultPoints" type="number" min="0" max="10000" value="0" required class="w-full border-2 border-slate-200 rounded-xl px-3 py-3 text-sm font-semibold mt-1.5 bg-white text-slate-800">
+            </div>
+          </div>
+          <button type="submit" class="w-full bg-[#0B5EC2] hover:bg-[#074A9A] text-white py-3.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-lg transition"><i class="fa-solid fa-plus"></i> ADD RESULT & UPDATE POINTS</button>
+        </form>
+
+        <div class="mt-3">
+          <input type="file" id="excelResultUpload" accept=".xlsx, .xls, .csv" class="hidden">
+          <button type="button" onclick="document.getElementById('excelResultUpload').click()" class="w-full bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 transition py-2.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-sm mb-2"><i class="fa-solid fa-file-excel"></i> IMPORT RESULTS FROM EXCEL</button>
+          
+          <!-- EXCEL RESULT TEMPLATE DOWNLOAD VISIBLE LINK ADDED HERE -->
+          <div class="text-[10px] text-center text-slate-400 font-medium leading-tight mt-1 pb-2">
+            Expected Headers: Chest No, Event, Prize, Points, Grade<br>
+            <a href="#" onclick="downloadResultTemplate(event)" class="text-[#0B5EC2] hover:text-[#074A9A] underline font-bold mt-1.5 inline-block"><i class="fa-solid fa-download"></i> Download Result Template</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADD NEW EVENT SECTION -->
+      <div class="mt-6 border-t border-slate-100 pt-5">
+        <p class="text-xs font-black tracking-wide text-slate-500 uppercase mb-3"><i class="fa-solid fa-folder-plus mr-1"></i> Create New Event Item</p>
+        
+        <form id="modalAddEventForm" class="flex flex-col sm:flex-row gap-2 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div class="flex-1">
+            <label class="text-[10px] font-black tracking-wider block mb-1">EVENT NAME</label>
+            <input id="modalNewEventName" type="text" placeholder="e.g. Essay Writing" required class="w-full border-2 border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold bg-white">
+          </div>
+          
+          <div class="w-full sm:w-auto">
+            <label class="text-[10px] font-black tracking-wider block mb-1">TYPE</label>
+            <select id="modalNewEventType" required class="w-full border-2 border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold bg-white">
+              <option value="Stage">Stage</option><option value="Offstage">Offstage</option><option value="General">General</option>
+            </select>
+          </div>
+
+          <div class="w-full sm:w-auto">
+            <label class="text-[10px] font-black tracking-wider block mb-1">CATEGORY</label>
+            <select id="modalNewEventCategory" required class="w-full border-2 border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold bg-white">
+              <option value="ALL">ALL / COMMON</option>
+              <option value="THAMHEEDIYYA">THAMHEEDIYYA</option>
+              <option value="ALIYA">ALIYA</option>
+              <option value="PG">PG</option>
+            </select>
+          </div>
+          
+          <div class="flex items-end">
+            <button type="submit" class="w-full sm:w-auto bg-black hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-md transition h-[42.5px]">ADD</button>
+          </div>
+        </form>
+
+        <div class="mt-3">
+          <input type="file" id="excelEventUpload" accept=".xlsx, .xls, .csv" class="hidden">
+          <button type="button" onclick="document.getElementById('excelEventUpload').click()" class="w-full bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 transition py-2.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-sm mb-2"><i class="fa-solid fa-file-excel"></i> IMPORT EVENTS FROM EXCEL</button>
+          <div class="text-[10px] text-center text-slate-400 font-medium leading-tight pb-2">
+            Expected Headers: Event Name, Type, Category<br>
+            <a href="#" onclick="downloadEventTemplate(event)" class="text-[#0B5EC2] hover:text-[#074A9A] underline font-bold mt-1.5 inline-block"><i class="fa-solid fa-download"></i> Download Event Template</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORY / RESULT LIST (Deletable by Host) -->
+      <div class="mt-6 border-t border-slate-100 pt-5">
+        <div class="flex justify-between items-center"><p class="text-xs font-black tracking-wide text-slate-500 uppercase"><i class="fa-solid fa-list-check mr-1"></i> Result List (History)</p></div>
+        <div id="modalResultHistory" class="mt-3 space-y-2 max-h-[160px] overflow-y-auto scroll-box pr-2"></div>
+      </div>
+
+      <!-- EVENT LIST (Deletable by Host) -->
+      <div class="mt-6 border-t border-slate-100 pt-5">
+        <p class="text-xs font-black tracking-wide text-slate-500 uppercase mb-3"><i class="fa-solid fa-list mr-1"></i> Added Events List</p>
+        <div id="modalEventList" class="mt-3 space-y-2 max-h-[160px] overflow-y-auto scroll-box pr-2"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="bg-black text-white mt-8">
+  <div class="max-w-[1440px] mx-auto px-4 md:px-6 py-10 grid md:grid-cols-4 gap-8">
+    <div class="md:col-span-2">
+      <div class="flex items-center gap-3"><img src="https://www.designarena.ai/u/a462b118-45bd-4495-92c1-61f08e26d8a6" class="w-12 h-12 bg-white rounded-xl p-1 object-contain" alt="logo"><div><p class="font-archivo font-black text-xl">MAJMA'A ARTS FEST <span class="text-[#4DA3FF]">2K26</span></p><p class="text-xs text-slate-400">Majma'a Arts Fest 2026 • Where Talent Shines</p></div></div>
+      <p class="text-sm text-slate-400 mt-4 max-w-md">Official result dashboard for MAJMA'A ARTS FEST 2K26. Overall, Group Wise & Individual results with live point counting for groups MA'BAR, MELOOHA and MUZRIZ.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-[100] hidden bg-black text-white px-5 py-3 rounded-full font-bold text-sm shadow-2xl flex items-center gap-2"></div>
+
+<script>
+// --- INTRO ANIMATION LOGIC ---
+document.body.style.overflow = 'hidden';
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const intro = document.getElementById('introScreen');
+    intro.style.opacity = '0';
+    setTimeout(() => { intro.remove(); document.body.style.overflow = ''; }, 800);
+  }, 2200); 
+});
+// -----------------------------
+
+// --- COUNTDOWN TIMER LOGIC ---
+const countDownDate = new Date("Nov 15, 2026 08:00:00").getTime();
+const countdownInterval = setInterval(function() {
+  const now = new Date().getTime();
+  const distance = countDownDate - now;
+
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  document.getElementById("cdD").textContent = days.toString().padStart(2, '0');
+  document.getElementById("cdH").textContent = hours.toString().padStart(2, '0');
+  document.getElementById("cdM").textContent = minutes.toString().padStart(2, '0');
+  document.getElementById("cdS").textContent = seconds.toString().padStart(2, '0');
+
+  if (distance < 0) {
+    clearInterval(countdownInterval);
+    document.getElementById("cdD").textContent = "00";
+    document.getElementById("cdH").textContent = "00";
+    document.getElementById("cdM").textContent = "00";
+    document.getElementById("cdS").textContent = "00";
+  }
+}, 1000);
+// -----------------------------
+
+const GROUPS={
+  mabar:{id:'mabar',name:"MA'BAR",color:'#0B5EC2',light:'#EAF3FF',tag:'GROUP 01'},
+  meloha:{id:'meloha',name:'MELOOHA',color:'#7C3AED',light:'#F3E8FF',tag:'GROUP 02'},
+  muzriz:{id:'muzriz',name:'MUZRIZ',color:'#EA580C',light:'#FFF7ED',tag:'GROUP 03'}
+};
+
+let eventTypes = JSON.parse(localStorage.getItem('maf_eventTypes')) || {};
+let eventCategories = JSON.parse(localStorage.getItem('maf_eventCategories')) || {}; 
+let eventsList = JSON.parse(localStorage.getItem('maf_eventsList')) || [];
+
+let participants = JSON.parse(localStorage.getItem('maf_participants')) || [];
+let registeredNew = JSON.parse(localStorage.getItem('maf_registeredNew')) || [];
+let resultHistory = JSON.parse(localStorage.getItem('maf_resultHistory')) || [];
+
+let uid = 100;
+if (participants.length > 0) {
+    uid = Math.max(...participants.map(p => p.uid));
+}
+
+function saveData() {
+    localStorage.setItem('maf_eventTypes', JSON.stringify(eventTypes));
+    localStorage.setItem('maf_eventCategories', JSON.stringify(eventCategories));
+    localStorage.setItem('maf_eventsList', JSON.stringify(eventsList));
+    localStorage.setItem('maf_participants', JSON.stringify(participants));
+    localStorage.setItem('maf_registeredNew', JSON.stringify(registeredNew));
+    localStorage.setItem('maf_resultHistory', JSON.stringify(resultHistory));
+}
+
+let selectedRegGroup='mabar';
+let currentGroupWise='mabar';
+let currentCategoryView='Stage';
+let currentIndividualCat='ALL'; 
+let searchQuery='';
+let sortBy='points';
+let chart=null;
+let individualChart=null;
+let emergingChart=null;
+
+function groupTotal(gid){return participants.filter(p=>p.group===gid).reduce((s,p)=>s+p.points,0)}
+function groupCount(gid){return participants.filter(p=>p.group===gid).length}
+function groupFirst(gid){return participants.filter(p=>p.group===gid && p.award==='1st Prize').length}
+function totalPoints(){return participants.reduce((s,p)=>s+p.points,0)}
+
+function countUp(el,target){
+  if(!el) return;
+  let start=0;const dur=900;const t0=performance.now();
+  function step(t){const prog=Math.min((t-t0)/dur,1);const val=Math.floor(start+(target-start)*(1-Math.pow(1-prog,3)));el.textContent=val;if(prog<1)requestAnimationFrame(step);else el.textContent=target}
+  requestAnimationFrame(step);
+}
+
+// Function to generate the correct HTML <options> string based on a target category
+function getEventOptionsHTML(targetCat) {
+  let optsHTML = '';
+  ['Stage', 'Offstage', 'General'].forEach(type => {
+      const filteredEvents = eventsList.filter(e => {
+          if (eventTypes[e] !== type) return false;
+          const eCat = eventCategories[e] || 'ALL';
+          
+          return type === 'General' || eCat === 'ALL' || eCat === targetCat || targetCat === 'ALL';
+      });
+
+      if (filteredEvents.length > 0) {
+          optsHTML += `<optgroup label="${type.toUpperCase()} EVENTS">`;
+          filteredEvents.forEach(e => {
+              // We replace invisible spaces so UI looks clean
+              optsHTML += `<option value="${e}">${e.replace(/\u200B/g, '')} (${eventCategories[e] || 'ALL'})</option>`;
+          });
+          optsHTML += `</optgroup>`;
+      }
+  });
+  return optsHTML;
+}
+
+// Global setup for dropdowns
+function populateEventDropdowns() {
+   const fCatEl = document.getElementById('fCat');
+   const fEvent = document.getElementById('fEvent');
+   if (fEvent) {
+       fEvent.innerHTML = getEventOptionsHTML(fCatEl ? fCatEl.value : 'THAMHEEDIYYA');
+   }
+   
+   // Host form defaults to ALL when no participant is manually selected
+   const mEvent = document.getElementById('modalResultEvent');
+   if (mEvent) {
+       const currentSelection = mEvent.value;
+       mEvent.innerHTML = '<option value="">Select event</option>' + getEventOptionsHTML('ALL');
+       if (eventsList.includes(currentSelection)) mEvent.value = currentSelection;
+   }
+}
+
+// Listen to registration Category change to dynamically filter registration events
+document.getElementById('fCat').addEventListener('change', function() {
+    document.getElementById('fEvent').innerHTML = getEventOptionsHTML(this.value);
+});
+
+// Listen to Host "Participant Selection" change to dynamically filter result events
+document.getElementById('modalResultParticipant').addEventListener('change', function() {
+    const pid = Number(this.value);
+    const p = participants.find(x => x.uid === pid);
+    const cat = p ? p.cat : 'ALL';
+    
+    const mEvent = document.getElementById('modalResultEvent');
+    const currentSelection = mEvent.value;
+    
+    mEvent.innerHTML = '<option value="">Select event</option>' + getEventOptionsHTML(cat);
+    
+    if (Array.from(mEvent.options).some(opt => opt.value === currentSelection)) {
+        mEvent.value = currentSelection;
+    }
+});
+
+
+function updateStats(animate=true){
+  const tp=totalPoints();
+  
+  // Calculate Pending Results
+  const eventsWithResults = new Set(resultHistory.map(r => r.event));
+  let pending = eventsList.length - eventsWithResults.size;
+  if(pending < 0) pending = 0;
+  
+  if(animate){
+    countUp(document.getElementById('statPending'), pending);
+    countUp(document.getElementById('statPoints'),tp);
+    countUp(document.getElementById('statEvents'),eventsList.length);
+  }
+  else{
+    document.getElementById('statPending').textContent=pending;
+    document.getElementById('statPoints').textContent=tp;
+    document.getElementById('statEvents').textContent=eventsList.length;
+  }
+  
+  if (participants.length > 0) {
+      const sorted=Object.values(GROUPS).sort((a,b)=>groupTotal(b.id)-groupTotal(a.id));
+      document.getElementById('statLeader').textContent=sorted[0].name;
+      document.getElementById('statLeader').style.color=sorted[0].color;
+  } else {
+      document.getElementById('statLeader').textContent="N/A";
+      document.getElementById('statLeader').style.color="#64748b";
+  }
+}
+
+function renderOverall(){
+  const sorted=Object.values(GROUPS).map(g=>({...g,total:groupTotal(g.id),count:groupCount(g.id),first:groupFirst(g.id)})).sort((a,b)=>b.total-a.total);
+  const max=sorted[0].total||1;
+  const medals=['🥇','🥈','🥉'];
+  
+  document.getElementById('podium').innerHTML=sorted.map((g,i)=>`
+    <div class="rounded-2xl border-2 ${i===0?'border-yellow-400 bg-gradient-to-b from-yellow-50 to-white':'border-slate-100 bg-white'} p-5 relative overflow-hidden">
+      <div class="absolute top-3 right-3 text-2xl">${medals[i]}</div>
+      <span class="text-[10px] font-black tracking-widest px-2 py-1 rounded-full text-white" style="background:${g.color}">${g.tag}</span>
+      <h3 class="font-archivo font-black text-2xl mt-3" style="color:${g.color}">${g.name}</h3>
+      <p class="text-xs text-slate-500 font-semibold">${g.count} participants • ${g.first} first prizes</p>
+      <p class="font-archivo font-black text-4xl mt-3 group-total" data-gid="${g.id}">${g.total}</p>
+      <p class="text-[11px] font-bold tracking-widest text-slate-400">TOTAL POINTS</p>
+      <div class="h-2.5 bg-slate-100 rounded-full mt-3 overflow-hidden"><div class="progress-bar h-full rounded-full" style="width:${Math.round(g.total/max*100)}%;background:${g.color}"></div></div>
+    </div>`).join('');
+
+  document.getElementById('raceList').innerHTML=sorted.map((g,i)=>`<div class="flex items-center gap-3"><span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${i===0?'bg-yellow-400 text-black':'bg-white/15'}">${i+1}</span><span class="flex-1 font-bold text-sm">${g.name}</span><span class="font-archivo font-black">${g.total} pts</span></div>`).join('');
+  
+  const ctx=document.getElementById('pointsChart');
+  if(ctx && chart){ chart.data.datasets[0].data = sorted.map(g=>g.total); chart.update(); }
+  else if(ctx){ chart=new Chart(ctx,{type:'bar',data:{labels:sorted.map(g=>g.name),datasets:[{data:sorted.map(g=>g.total),backgroundColor:sorted.map(g=>g.color),borderRadius:12,barThickness:52}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}}); }
+}
+
+function renderGroupWise(){
+  const g=GROUPS[currentGroupWise];
+  const list=participants.filter(p=>p.group===currentGroupWise).sort((a,b)=>b.points-a.points);
+  const total=groupTotal(currentGroupWise);
+  const top=list[0];
+  document.querySelectorAll('.gw-pill').forEach(b=>b.classList.toggle('group-chip-active',b.dataset.gid===currentGroupWise));
+  document.getElementById('groupWiseDetail').innerHTML=`
+    <div class="grid lg:grid-cols-3 gap-4">
+      <div class="rounded-2xl p-5 text-white relative overflow-hidden" style="background:${g.color}">
+        <p class="text-[10px] tracking-[.25em] font-bold opacity-80">${g.tag} • GROUP WISE</p>
+        <h3 class="font-archivo font-black text-3xl mt-1">${g.name}</h3>
+        <p class="font-archivo font-black text-5xl mt-4" id="gwTotal">${total}</p><p class="text-xs font-bold opacity-80 tracking-widest">TOTAL POINTS</p>
+        <div class="grid grid-cols-3 gap-2 mt-4 text-center">
+          <div class="bg-white/20 rounded-xl py-2"><p class="font-black">${list.length}</p><p class="text-[9px] font-bold">MEMBERS</p></div>
+          <div class="bg-white/20 rounded-xl py-2"><p class="font-black">${groupFirst(currentGroupWise)}</p><p class="text-[9px] font-bold">1ST PRIZE</p></div>
+          <div class="bg-white/20 rounded-xl py-2"><p class="font-black">${list.length?Math.round(total/list.length):0}</p><p class="text-[9px] font-bold">AVG PTS</p></div>
+        </div>
+      </div>
+      <div class="lg:col-span-2 border rounded-2xl overflow-hidden">
+        <div class="bg-slate-50 px-4 py-3 flex justify-between items-center"><span class="font-black text-sm">${g.name} — Top Performers</span><span class="text-xs font-bold text-slate-400">${top?`⭐ ${top.name} • ${top.points} pts`:''}</span></div>
+        <div class="divide-y max-h-[280px] overflow-y-auto scroll-box">
+          ${list.map((p,i)=>`
+            <div class="flex items-center gap-3 px-4 py-3 hover:bg-blue-50/50">
+              <span class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-xs font-black shrink-0">${i+1}</span>
+              <div class="flex-1 min-w-0"><p class="font-bold truncate">${p.name}</p><p class="text-xs text-slate-400">Chest ${p.chest} • ${p.event.replace(/\u200B/g, '')}</p></div>
+              <span class="font-archivo font-black text-lg" style="color:${g.color}">${p.points}</span>
+            </div>`).join('')||'<p class="p-6 text-center text-slate-400 font-semibold">No participants in this group yet.</p>'}
+        </div>
+      </div>
+    </div>`;
+  countUp(document.getElementById('gwTotal'),total);
+}
+
+function renderCategoryWise() {
+  const list = participants.filter(p => (eventTypes[p.event] || 'General') === currentCategoryView).sort((a,b) => b.points - a.points);
+  
+  document.getElementById('catViewLabel').textContent = currentCategoryView.toUpperCase();
+  document.querySelectorAll('.cat-pill').forEach(b => {
+    if(b.dataset.cattype === currentCategoryView) b.className = 'cat-pill bg-black text-white px-5 py-2.5 rounded-full font-black text-sm transition-all';
+    else b.className = 'cat-pill px-5 py-2.5 rounded-full font-black text-sm text-slate-500 hover:text-black transition-all';
+  });
+
+  document.getElementById('noCatResult').classList.toggle('hidden', list.length > 0);
+  document.getElementById('categoryTable').innerHTML = list.map((p, i) => {
+    const g = GROUPS[p.group];
+    return `<tr class="border-b hover:bg-blue-50/40">
+      <td class="p-3"><span class="w-8 h-8 rounded-full ${i<3?'bg-yellow-400 text-black':'bg-slate-100'} flex items-center justify-center font-black text-xs">${i+1}</span></td>
+      <td class="p-3"><p class="font-bold">${p.name}</p><p class="text-[11px] text-slate-400">Chest: ${p.chest} • ${p.cat}</p></td>
+      <td class="p-3 font-semibold">${p.event.replace(/\u200B/g, '')} ${p.grade ? '<span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full ml-2 border">Grade '+p.grade+'</span>' : ''}</td>
+      <td class="p-3"><span class="text-[11px] font-black px-2.5 py-1 rounded-full text-white" style="background:${g.color}">${g.name}</span></td>
+      <td class="p-3"><span class="font-archivo font-black text-xl">${p.points}</span> <span class="text-[10px] font-bold text-slate-400">PTS</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function getFiltered(){
+  let list=[...participants];
+  if(searchQuery){
+    const q=searchQuery.toLowerCase();
+    list=list.filter(p=>p.name.toLowerCase().includes(q)||p.chest.includes(q)||p.event.toLowerCase().includes(q)||GROUPS[p.group].name.toLowerCase().includes(q));
+  }
+  if(sortBy==='points') list.sort((a,b)=>b.points-a.points);
+  if(sortBy==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
+  if(sortBy==='chest') list.sort((a,b)=>a.chest.localeCompare(b.chest));
+  return list;
+}
+
+function renderIndividual(){
+  document.getElementById('icatViewLabel').textContent = currentIndividualCat === 'ALL' ? 'ALL GRADES' : currentIndividualCat;
+  document.querySelectorAll('.icat-pill').forEach(b => {
+    b.className = b.dataset.icat === currentIndividualCat ? 'icat-pill bg-black text-white px-4 md:px-5 py-2 rounded-full font-black text-xs transition-all' : 'icat-pill px-4 md:px-5 py-2 rounded-full font-black text-xs text-slate-500 hover:text-black transition-all';
+  });
+
+  let list = getFiltered();
+  if(currentIndividualCat !== 'ALL') list = list.filter(p => p.cat === currentIndividualCat);
+
+  const rankMap = {};
+  [...list].sort((a,b) => b.points - a.points).forEach((p, i) => rankMap[p.uid] = i + 1);
+  
+  document.getElementById('indivCount').textContent = list.length;
+  document.getElementById('noResult').classList.toggle('hidden', list.length > 0);
+  
+  document.querySelectorAll('.host-action-col').forEach(el => el.classList.toggle('hidden', !hostAuthenticated));
+
+  document.getElementById('individualTable').innerHTML = list.map(p => {
+    const g = GROUPS[p.group];
+    const hostTd = hostAuthenticated ? `<td class="p-3 text-center no-print"><button onclick="removeParticipant(${p.uid})" class="text-red-500 hover:bg-red-50 px-3 py-1.5 rounded-lg text-xs font-bold transition border border-transparent hover:border-red-200"><i class="fa-solid fa-trash"></i></button></td>` : '';
+
+    return `<tr class="border-b hover:bg-blue-50/40">
+      <td class="p-3"><span class="w-8 h-8 rounded-full ${rankMap[p.uid]<=3?'bg-yellow-400 text-black':'bg-slate-100'} flex items-center justify-center font-black text-xs">${rankMap[p.uid]}</span></td>
+      <td class="p-3"><p class="font-bold">${p.name}</p><p class="text-xs text-slate-400">${p.cat}</p></td>
+      <td class="p-3 font-bold text-[#0B5EC2]">${p.chest}</td>
+      <td class="p-3 font-semibold">${p.event.replace(/\u200B/g, '')} <span class="text-[9px] font-bold text-slate-400 block">${eventTypes[p.event]||'General'} ${p.grade ? '• Grade ' + p.grade : ''}</span></td>
+      <td class="p-3"><span class="text-[11px] font-black px-2.5 py-1 rounded-full text-white" style="background:${g.color}">${g.name}</span></td>
+      <td class="p-3"><span class="font-archivo font-black text-xl">${p.points}</span> <span class="text-[10px] font-bold text-slate-400">PTS</span></td>
+      <td class="p-3 font-bold text-slate-600">${p.award || '-'}</td>
+      ${hostTd}
+    </tr>`}).join('');
+}
+
+function selectGroupWise(gid) {
+  currentGroupWise = gid;
+  switchTab('group');
+  document.getElementById('dashboard').scrollIntoView({behavior:'smooth'});
+}
+
+function renderGroupsGrid(){
+  const sorted=Object.values(GROUPS).map(g=>({...g,total:groupTotal(g.id),count:groupCount(g.id)})).sort((a,b)=>b.total-a.total);
+  document.getElementById('groupsGrid').innerHTML=sorted.map((g,i)=>`
+    <div class="bg-white rounded-[22px] card-shadow border overflow-hidden group hover:-translate-y-1 transition">
+      <div class="p-5 text-white relative overflow-hidden" style="background:${g.color}">
+        <div class="absolute inset-0 circuit-bg opacity-40"></div>
+        <div class="relative flex justify-between"><span class="text-[10px] font-black tracking-widest bg-white/20 px-2 py-1 rounded-full">${g.tag}</span><span class="text-xl">${i===0?'👑':''}</span></div>
+        <h3 class="relative font-archivo font-black text-3xl mt-3">${g.name}</h3>
+        <p class="relative text-xs opacity-90 font-semibold">${g.count} participants • Rank #${i+1}</p>
+      </div>
+      <div class="p-5">
+        <div class="flex items-end justify-between"><div><p class="font-archivo font-black text-4xl">${g.total}</p><p class="text-[10px] font-bold tracking-widest text-slate-400">TOTAL POINTS</p></div><span class="bg-slate-100 px-3 py-1.5 rounded-full text-xs font-black">#${i+1} PLACE</span></div>
+        <div class="h-2 bg-slate-100 rounded-full mt-3 overflow-hidden"><div class="h-full progress-bar" style="width:${g.total > 0 ? Math.round(g.total/(sorted[0].total||1)*100) : 0}%;background:${g.color}"></div></div>
+        <button onclick="selectGroupWise('${g.id}')" class="mt-4 w-full border-2 py-2.5 rounded-full text-xs font-black hover:text-white transition" style="border-color:${g.color};color:${g.color}" onmouseover="this.style.background='${g.color}';this.style.color='white'" onmouseout="this.style.background='transparent';this.style.color='${g.color}'">VIEW GROUP RESULT →</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderRegisteredList(){
+  const box=document.getElementById('registeredList');
+  document.getElementById('regCountBadge').textContent=registeredNew.length+' new';
+  document.getElementById('emptyReg').style.display=registeredNew.length?'none':'block';
+  box.innerHTML=registeredNew.slice().reverse().map(p=>{
+    const g=GROUPS[p.group];
+    return `<div class="flex items-center gap-3 border rounded-xl p-3 bg-[#F8FBFF]">
+      <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-black shrink-0" style="background:${g.color}">${p.name.charAt(0)}</div>
+      <div class="flex-1 min-w-0"><p class="font-bold text-sm truncate">${p.name}</p><p class="text-[11px] text-slate-400">Chest ${p.chest} • ${p.event.replace(/\u200B/g, '')}</p></div>
+      <button onclick="removeParticipant(${p.uid})" class="text-red-400 hover:text-red-600 text-sm shrink-0 p-2"><i class="fa-solid fa-trash"></i></button>
+    </div>`}).join('');
+}
+
+function renderModalResultForm(){
+  const participantSel = document.getElementById('modalResultParticipant');
+  const catFilter = document.getElementById('modalResultFilterCat');
+  if(!participantSel) return;
+  const oldParticipant = participantSel.value;
+  
+  let filteredParticipants = participants.slice().sort((a,b)=>a.name.localeCompare(b.name));
+  if(catFilter && catFilter.value !== 'ALL') filteredParticipants = filteredParticipants.filter(p => p.cat === catFilter.value);
+  
+  participantSel.innerHTML='<option value="">Select participant</option>'+filteredParticipants
+    .map(p=>`<option value="${p.uid}">${p.name} — Chest ${p.chest} (${p.cat} • ${GROUPS[p.group].name})</option>`).join('');
+  if(filteredParticipants.some(p=>String(p.uid)===oldParticipant)) participantSel.value=oldParticipant;
+
+  document.getElementById('modalResultHistory').innerHTML=resultHistory.length
+    ? resultHistory.slice(0,15).map(r=>`
+      <div class="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white border border-slate-200 px-3 py-2 shadow-sm">
+        <div><p class="text-sm font-bold">${r.name} <span class="text-slate-400 font-medium">• ${r.event.replace(/\u200B/g, '')}</span></p>
+        <p class="text-[10px] text-slate-400">${r.group} • ${r.award}${r.grade ? ' • Grade ' + r.grade : ''}</p></div>
+        <div class="flex items-center gap-3">
+          <span class="font-archivo font-black text-green-600">+${r.points} PTS</span>
+          <button type="button" onclick="deleteResult('${r.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>`).join('')
+    : '<p class="text-xs text-slate-400">No results added yet.</p>';
+}
+
+function renderEventList() {
+  const el = document.getElementById('modalEventList');
+  if(!el) return;
+  el.innerHTML = eventsList.length ? eventsList.map(ev => `
+    <div class="flex items-center justify-between bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
+      <div><p class="text-sm font-bold">${ev.replace(/\u200B/g, '')}</p><p class="text-[10px] text-slate-500">${eventTypes[ev] || 'General'} • Category: ${eventCategories[ev] || 'ALL'}</p></div>
+      <button type="button" onclick="deleteEvent('${ev}')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+    </div>
+  `).join('') : '<p class="text-xs text-slate-400">No events found.</p>';
+}
+
+function renderAll(){
+  saveData();
+  updateStats(false);
+  renderOverall();
+  renderGroupWise();
+  renderCategoryWise();
+  renderIndividual();
+  renderGroupsGrid(); 
+  renderRegisteredList();
+  renderModalResultForm();
+  if(hostAuthenticated) renderEventList();
+}
+
+function removeParticipant(uid){
+  if(!confirm("Are you sure you want to completely delete this participant?")) return;
+  const idx=participants.findIndex(p=>p.uid===uid);
+  if(idx>-1){const name=participants[idx].name;participants.splice(idx,1);registeredNew=registeredNew.filter(p=>p.uid!==uid);renderAll();updateStats(true);showToast(`${name} deleted permanently`,'info');}
+}
+
+function deleteEvent(evName) {
+  const cleanName = evName.replace(/\u200B/g, '');
+  if(!confirm(`Are you sure you want to delete the event: "${cleanName}"?`)) return;
+  eventsList = eventsList.filter(e => e !== evName);
+  delete eventTypes[evName];
+  delete eventCategories[evName];
+  populateEventDropdowns();
+  renderAll();
+  showToast(`Event "${cleanName}" deleted`, 'info');
+}
+
+function deleteResult(id) {
+  if(!confirm("Are you sure you want to delete this result? Points will be automatically deducted.")) return;
+  const idx = resultHistory.findIndex(r => r.id === id);
+  if(idx > -1) {
+    const res = resultHistory[idx];
+    const p = participants.find(x => x.uid === res.uid);
+    if(p) {
+      p.points = Math.max(0, p.points - res.points);
+      if(p.event === res.event) { 
+         p.grade = ''; p.award = ''; 
+      }
+    }
+    resultHistory.splice(idx, 1);
+    renderAll();
+    showToast('Result deleted and points deducted', 'info');
+  }
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('tab-active',b.dataset.tab===tab));
+  ['overall','group','categories','individual'].forEach(t=>document.getElementById('panel-'+t).classList.toggle('hidden',t!==tab));
+  if(tab==='group') renderGroupWise();
+  if(tab==='individual') renderIndividual();
+  if(tab==='overall') renderOverall();
+}
+
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.innerHTML=(type==='success'?'<i class="fa-solid fa-circle-check text-green-400"></i>':'<i class="fa-solid fa-circle-info text-blue-400"></i>')+msg;
+  t.classList.remove('hidden');t.classList.add('flex');
+  setTimeout(()=>{t.classList.add('hidden');t.classList.remove('flex')},3200);
+}
+
+// HOST MODAL LOGIC 
+const HOST_PASSWORD = 'MAJMAA@2026';
+let hostAuthenticated = false;
+
+function updateHostUI() {
+  if (hostAuthenticated) {
+    document.getElementById('modalHostLoginPanel').classList.add('hidden');
+    document.getElementById('modalHostResultPanel').classList.remove('hidden');
+    document.getElementById('regLockScreen').classList.add('hidden');
+    document.getElementById('regFormContainer').classList.remove('hidden');
+    renderEventList();
+  } else {
+    document.getElementById('modalHostLoginPanel').classList.remove('hidden');
+    document.getElementById('modalHostResultPanel').classList.add('hidden');
+    document.getElementById('regLockScreen').classList.remove('hidden');
+    document.getElementById('regFormContainer').classList.add('hidden');
+  }
+  renderIndividual(); 
+}
+
+function openHostModal(){ document.getElementById('hostModal').classList.remove('hidden'); updateHostUI(); }
+function closeHostModal(){ document.getElementById('hostModal').classList.add('hidden'); }
+
+document.getElementById('modalHostLoginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  if(document.getElementById('modalHostPassword').value === HOST_PASSWORD){
+    hostAuthenticated = true;
+    document.getElementById('modalHostLoginMessage').classList.add('hidden');
+    document.getElementById('modalHostPassword').value = '';
+    updateHostUI();
+    renderModalResultForm();
+    showToast('Host access granted! You can now edit and delete.','success');
+  } else {
+    document.getElementById('modalHostLoginMessage').classList.remove('hidden');
+    document.getElementById('modalHostPassword').value = '';
+  }
+});
+
+document.getElementById('modalHostLogoutBtn').addEventListener('click', function(){
+  hostAuthenticated = false;
+  updateHostUI();
+  showToast('Host logged out.','info');
+});
+
+// Adding Results
+document.getElementById('modalResultForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const uidValue=Number(document.getElementById('modalResultParticipant').value);
+  const eventName=document.getElementById('modalResultEvent').value;
+  const awardValue=document.getElementById('modalResultAward').value;
+  const gradeValue=document.getElementById('modalResultGrade').value;
+  const points=Number(document.getElementById('modalResultPoints').value);
+  const participant=participants.find(p=>p.uid===uidValue);
+  
+  if(!participant || !eventName || !Number.isFinite(points)){ showToast('Invalid data','info'); return; }
+  
+  participant.points+=points;
+  participant.event=eventName;
+  participant.grade=gradeValue;
+  participant.award=awardValue;
+  
+  resultHistory.unshift({
+    id: Date.now().toString() + Math.random().toString().slice(2,5),
+    uid: participant.uid,
+    name: participant.name, event: eventName, group: GROUPS[participant.group].name,
+    points, award: awardValue, grade: gradeValue
+  });
+  
+  renderAll(); updateStats(true); showToast(`Added: ${participant.name} +${points} points`,'success');
+});
+
+
+// ADD NEW EVENT dynamically (Multiple same names supported with zero-width space trick)
+document.getElementById('modalAddEventForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  let newEvent = document.getElementById('modalNewEventName').value.trim();
+  const newEventType = document.getElementById('modalNewEventType').value;
+  const newEventCat = document.getElementById('modalNewEventCategory').value;
+  
+  if (newEvent) {
+    // Append invisible space if the string already exists so we can add it again!
+    while(eventsList.includes(newEvent)) {
+        newEvent += '\u200B';
+    }
+
+    eventTypes[newEvent] = newEventType;
+    eventCategories[newEvent] = newEventCat;
+    eventsList.push(newEvent);
+    
+    populateEventDropdowns(); renderAll();
+    showToast(`Event "${newEvent.replace(/\u200B/g, '')}" added successfully!`, 'success');
+    document.getElementById('modalNewEventName').value = '';
+  }
+});
+
+// ----------------------------------------------------
+// REGISTRATION FORM SUBMISSION LOGIC
+// ----------------------------------------------------
+document.getElementById('regForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  
+  if (!hostAuthenticated) {
+    showToast('Registration is locked. Please login as Host.', 'info');
+    return;
+  }
+  
+  const name=document.getElementById('fName'),chest=document.getElementById('fChest'),eventEl=document.getElementById('fEvent'),cat=document.getElementById('fCat');
+  const selectedEvents = Array.from(eventEl.selectedOptions).map(opt => opt.value);
+  
+  let ok=true;
+  function setErr(input,errId,valid){document.getElementById(errId).classList.toggle('hidden',valid);input.classList.toggle('error-border',!valid);if(!valid)ok=false;}
+  
+  setErr(name,'eName',name.value.trim().length>=3);
+  setErr(chest,'eChest',/^\d{2,3}$/.test(chest.value.trim()));
+  setErr(eventEl,'eEvent',selectedEvents.length > 0);
+  
+  if(!ok){showToast('Please fix highlighted fields','info');return;}
+  
+  let duplicates = [];
+  selectedEvents.forEach(evt => {
+    if(participants.some(p => p.chest === chest.value.trim() && p.event === evt)) {
+       duplicates.push(evt.replace(/\u200B/g, ''));
+    }
+  });
+
+  if(duplicates.length > 0){
+    document.getElementById('eEvent').textContent = 'Chest No. already registered for: ' + duplicates.join(', ');
+    document.getElementById('eEvent').classList.remove('hidden');
+    eventEl.classList.add('error-border');
+    return;
+  }
+  
+  selectedEvents.forEach(evt => {
+      const newP={uid:++uid,name:name.value.trim(),chest:chest.value.trim(),event:evt,group:selectedRegGroup,points:0,cat:cat.value,grade:'',award:''};
+      participants.push(newP);
+      registeredNew.push(newP);
+  });
+  
+  document.getElementById('successBox').classList.remove('hidden');
+  document.getElementById('successText').textContent=`${name.value.trim()} • Chest ${chest.value.trim()} • ${selectedEvents.length} events • ${GROUPS[selectedRegGroup].name}`;
+  
+  renderAll();updateStats(true);
+  showToast(`Registered: ${name.value.trim()} for ${selectedEvents.length} event(s)`,'success');
+  
+  name.value='';chest.value='';
+  Array.from(eventEl.options).forEach(opt => opt.selected = false);
+  
+  setTimeout(()=>document.getElementById('successBox').classList.add('hidden'),5000);
+});
+
+// ----------------------------------------------------
+// EXCEL EXPORT & IMPORT UTILITIES
+// ----------------------------------------------------
+
+function downloadResultTemplate(e) {
+  e.preventDefault();
+  const ws = XLSX.utils.json_to_sheet([
+    { "Chest No": "102", "Event": "Mohiniyattam", "Prize": "1st Prize", "Points": 20, "Grade": "A" },
+    { "Chest No": "205", "Event": "Kathakali", "Prize": "2nd Prize", "Points": 15, "Grade": "B" },
+    { "Chest No": "118", "Event": "Debate", "Prize": "Participation", "Points": 2, "Grade": "" }
+  ]);
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Results"); XLSX.writeFile(wb, "MAF_Results_Template.xlsx");
+}
+
+function downloadEventTemplate(e) {
+  e.preventDefault();
+  const ws = XLSX.utils.json_to_sheet([
+    { "Event Name": "Water Color", "Type": "Offstage", "Category": "PG" },
+    { "Event Name": "Debate", "Type": "General", "Category": "ALIYA" },
+    { "Event Name": "Folk Dance", "Type": "Stage", "Category": "THAMHEEDIYYA" }
+  ]);
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Events"); XLSX.writeFile(wb, "MAF_Events_Template.xlsx");
+}
+
+function downloadExcelTemplate(e) {
+  e.preventDefault();
+  const ws = XLSX.utils.json_to_sheet([
+    { "Name": "Participant Name", "Chest": "101", "Event": "Oppana", "Group": "MABAR", "Category": "ALIYA" }
+  ]);
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Participants"); XLSX.writeFile(wb, "MAF_Registration_Template.xlsx");
+}
+
+// Event Excel Upload (Smart Duplicate Support)
+document.getElementById('excelEventUpload').addEventListener('change', function(e) {
+  if (!hostAuthenticated) return;
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const data = new Uint8Array(evt.target.result);
+    const rows = XLSX.utils.sheet_to_json(XLSX.read(data, {type: 'array'}).Sheets[XLSX.read(data, {type: 'array'}).SheetNames[0]]);
+    let addedCount = 0;
+    rows.forEach(row => {
+      let eName = (row['Event Name'] || row['Event'] || row['Name'])?.toString().trim();
+      if (!eName) return;
+      
+      const t = (row['Type'] || '').toString().toLowerCase();
+      const c = (row['Category'] || '').toString().toUpperCase();
+      
+      // Make unique
+      while(eventsList.includes(eName)) {
+        eName += '\u200B';
+      }
+      
+      eventTypes[eName] = t.includes('stage') ? 'Stage' : (t.includes('off') ? 'Offstage' : 'General');
+      eventCategories[eName] = c.includes('THAM') ? 'THAMHEEDIYYA' : (c.includes('ALIYA') ? 'ALIYA' : (c.includes('PG') ? 'PG' : 'ALL'));
+      
+      eventsList.push(eName);
+      addedCount++;
+    });
+    if(addedCount > 0) { populateEventDropdowns(); renderAll(); showToast(`Imported ${addedCount} new events!`, 'success'); }
+  };
+  reader.readAsArrayBuffer(file); this.value = '';
+});
+
+// Result Excel Upload
+document.getElementById('excelResultUpload').addEventListener('change', function(e) {
+  if (!hostAuthenticated) return;
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const data = new Uint8Array(evt.target.result);
+    const rows = XLSX.utils.sheet_to_json(XLSX.read(data, {type: 'array'}).Sheets[XLSX.read(data, {type: 'array'}).SheetNames[0]]);
+    let addedCount = 0;
+    rows.forEach(row => {
+      const chest = String(row['Chest No'] || row['Chest'] || '');
+      const eNameRaw = (row['Event'] || row['Event Name'])?.toString().trim();
+      const points = Number(row['Points'] || 0);
+      let grade = (row['Grade'] || '').toString().trim().toUpperCase();
+      let prize = (row['Prize'] || row['Award'] || row['Position'] || 'Imported Result').toString().trim();
+
+      if (!['A', 'B', 'C'].includes(grade)) grade = '';
+      if (!chest || !eNameRaw || isNaN(points)) return;
+      
+      const participant = participants.find(p => p.chest === chest.trim());
+      if (participant) {
+         // Auto-match duplicate event names to the participant's category if possible
+         let matchedEvt = eventsList.find(ev => ev.replace(/\u200B/g, '').toLowerCase() === eNameRaw.toLowerCase() && (eventCategories[ev] === participant.cat || eventCategories[ev] === 'ALL'))
+                          || eventsList.find(ev => ev.replace(/\u200B/g, '').toLowerCase() === eNameRaw.toLowerCase())
+                          || eNameRaw;
+                          
+         participant.points += points;
+         participant.event = matchedEvt;
+         participant.grade = grade;
+         participant.award = prize;
+         
+         resultHistory.unshift({
+           id: Date.now().toString() + Math.random().toString().slice(2,5),
+           uid: participant.uid,
+           name: participant.name, event: participant.event, group: GROUPS[participant.group].name,
+           points: points, award: prize, grade: grade
+         });
+         addedCount++;
+      }
+    });
+    if(addedCount > 0) { renderAll(); updateStats(true); showToast(`Successfully imported ${addedCount} results!`, 'success'); }
+  };
+  reader.readAsArrayBuffer(file); this.value = '';
+});
+
+// Participant Excel Upload
+document.getElementById('excelUpload').addEventListener('change', function(e) {
+  if (!hostAuthenticated) return;
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      const data = new Uint8Array(evt.target.result);
+      const rows = XLSX.utils.sheet_to_json(XLSX.read(data, {type: 'array'}).Sheets[XLSX.read(data, {type: 'array'}).SheetNames[0]]);
+      
+      let addedCount = 0;
+      rows.forEach(row => {
+        const name = (row['Name'] || row['FULL NAME'])?.toString().trim();
+        const chest = String(row['Chest No'] || row['CHEST NO.'] || row['Chest'] || '').trim();
+        const rawEvent = (row['Event'] || row['EVENT ITEM'])?.toString().trim();
+        const groupRaw = row['Group'] || row['SELECT GROUP'];
+        const cat = (row['Category'] || row['CATEGORY'] || 'THAMHEEDIYYA').toString().trim();
+
+        if (!name || !chest || !rawEvent || !groupRaw) return;
+        
+        let group = 'mabar';
+        const gl = groupRaw.toLowerCase();
+        if(gl.includes('melo')) group = 'meloha';
+        else if(gl.includes('muz')) group = 'muzriz';
+
+        // Auto-match exact event with correct category behind the scenes
+        let matchedEvent = eventsList.find(ev => ev.replace(/\u200B/g, '').toLowerCase() === rawEvent.toLowerCase() && (eventCategories[ev] === cat || eventCategories[ev] === 'ALL')) 
+                           || eventsList.find(ev => ev.replace(/\u200B/g, '').toLowerCase() === rawEvent.toLowerCase()) 
+                           || rawEvent;
+
+        if(participants.some(p => p.chest === chest && p.event === matchedEvent)) return; 
+
+        const newP = {
+            uid: ++uid, name: name, chest: chest, event: matchedEvent, 
+            group: group, points: 0, cat: cat, grade: '', award: ''
+        };
+        participants.push(newP); registeredNew.push(newP); addedCount++;
+      });
+      if(addedCount > 0) { renderAll(); updateStats(true); showToast(`Imported ${addedCount} participants!`, 'success'); }
+    } catch(err) { showToast('Error reading Excel file.', 'info'); }
+  };
+  reader.readAsArrayBuffer(file); this.value = ''; 
+});
+
+function downloadCSV(){
+  if(participants.length === 0) { showToast('No data to download yet.', 'info'); return; }
+  const sorted=[...participants].sort((a,b)=>b.points-a.points);
+  let csv='Rank,Name,Chest No,Event Item,Event Type,Group,Points,Award,Grade,Category\n';
+  sorted.forEach((p,i)=>{csv+=`${i+1},"${p.name}","${p.chest}","${p.event.replace(/\u200B/g, '')}","${eventTypes[p.event]||'General'}","${GROUPS[p.group].name}",${p.points},"${p.award||''}","${p.grade||''}","${p.cat}"\n`});
+  csv+=`\nGroup Summary\n`;
+  Object.values(GROUPS).forEach(g=>{csv+=`"${g.name}",,,"Total Points",,,"${groupTotal(g.id)}","${groupCount(g.id)} participants"\n`});
+  const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download="MAJA_ARTS_FEST_2K26_Results.csv";a.click();URL.revokeObjectURL(url);
+  showToast('Results CSV downloaded successfully!','success');
+}
+
+
+// Event Listeners for UI interaction
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+document.querySelectorAll('.gw-pill').forEach(b=>b.addEventListener('click',()=>{currentGroupWise=b.dataset.gid;renderGroupWise()}));
+document.getElementById('searchInput').addEventListener('input',e=>{searchQuery=e.target.value;renderIndividual();if(searchQuery) switchTab('individual')});
+document.getElementById('sortSelect').addEventListener('change',e=>{sortBy=e.target.value;renderIndividual()});
+document.querySelectorAll('.reg-group').forEach(b=>b.addEventListener('click',()=>{selectedRegGroup=b.dataset.regGroup;document.querySelectorAll('.reg-group').forEach(x=>x.classList.remove('reg-group-active'));b.classList.add('reg-group-active')}));
+document.getElementById('menuBtn').addEventListener('click',()=>document.getElementById('mobileMenu').classList.toggle('hidden'));
+document.getElementById('modalResultFilterCat').addEventListener('change', renderModalResultForm);
+
+// Init
+populateEventDropdowns();
+renderAll();
+updateStats(true);
+updateHostUI();
+</script>
+</body>
+</html>
